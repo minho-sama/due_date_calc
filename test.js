@@ -12,3 +12,5 @@
     //marad aznap
     //soksok héten keresztül megy a turnaround
     //pl "2:12PM Tuesday", 5003 és "2:12PM Tuesday", 5000
+    //perc 0, perc 00
+    //csak pár perc teljen el (turnaround 0.1)

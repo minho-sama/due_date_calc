@@ -38,7 +38,7 @@ function calculateDueDate(submitDate, turnaround) {
         return "Turnaround time must be at least 0"
     }
 
-    //calculating the resolve time
+    //calculating the resolve time (alapelv: átváltok mindent percbe, és onnan visszaszámolok)
 
     //workingDayInMins = 8*60 = 480
     //2:12PM Tuesday-> convert to mins -> 5*60 + 12 = 312
@@ -55,11 +55,10 @@ function calculateDueDate(submitDate, turnaround) {
         hoursElapsedOnSubmitDay = 4 + (hour - 1)
     }
 
-    const timeElapsedInMins = hoursElapsedOnSubmitDay * 60 + minute + turnaround * 60 //time of submit + turnaround = time of submit
+    const totalTimeElapsedInMins = hoursElapsedOnSubmitDay * 60 + minute + turnaround * 60 //time of submit + turnaround = time of resolve (in minutes)
 
-    const daysElapsed = Math.floor(timeElapsedInMins / workingDayInMins) //how many days passed from submit to resolve
+    const daysElapsed = Math.floor(totalTimeElapsedInMins / workingDayInMins) //how many days passed from submit to resolve
     const resolveDay = workingDays[(daysElapsed % 5 + submitDayIndex) % 5] //convert resolveDay to Mon-Fri format
-    console.log(resolveDay)
 
     //handle week cycling with modulo operator:
     //pl ha submitday 2 és 12 nap telt el -> 12%5 = 2 -> 2+2 = péntek
@@ -77,7 +76,25 @@ function calculateDueDate(submitDate, turnaround) {
         //-> emiatt kell a 2. modulo
             //szerda + 4 már 7 lenne ami undefined, így inkább a szerdát is kiveszem, lesz 0, de cserébe hozzáadom a 4-hez, lesz 6 -> 6%5 = 1 ami kedd
 
-    const resolveTimeInMins = timeElapsedInMins % workingDayInMins //convert to 2:12 format
+
+    //it is not enough to add hours and mins together, as turnaround can be non-integer (e.g. 16.5)
+    const resolveTimeInMins = totalTimeElapsedInMins % workingDayInMins //0 <= resolveTimeInMins < 480 (0 to 8)
+
+    function formatTimeInMins(resolveTime) {
+
+        const resolveHour24format = 9 + Math.floor(resolveTime / 60)
+        const resolveHour12format = ((resolveHour24format + 11) % 12 + 1) // resolveHour24format % 12 is not good for 12AM (results in 0)
+
+        const suffix = resolveHour24format > 12 ? "PM" : "AM"
+
+        const resolveMin = `0${resolveTime % 60}` //0 is needed, because 12:00AM input will have an output 12:0
+
+        let formattedTime = `${resolveHour12format}:${resolveMin.slice(-2)}${suffix}`
+
+        return formattedTime
+    }
+
+    const resolveTimeFormatted = formatTimeInMins(resolveTimeInMins);
 
     // console.log("time: " + time)
     // console.log("hour: " + hour)
@@ -86,8 +103,8 @@ function calculateDueDate(submitDate, turnaround) {
     // console.log("dayIndex: " + dayIndex)
     // console.log("turnaround: " + turnaround)
 
-    return "string";
+    return resolveTimeFormatted + " " + resolveDay; // heteket adja hozzá!!!
 }
 
 //"what is the input submitDate";
-console.log(calculateDueDate("2:12PM Tuesday", 5003)); //should return: 2:12PM Thursday
+console.log(calculateDueDate("12:00AM Thursday", 54)); //should return: 2:12PM Thursday
