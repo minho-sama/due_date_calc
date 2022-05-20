@@ -3,9 +3,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-extra-parens */
 
-const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-
 function calculateDueDate(submitDate, turnaround) {
+
+    const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
     const time = submitDate.split(" ")[0].slice(0, -2) //2:12
     const hour = Number(time.split(":")[0]) //2
@@ -96,4 +96,6 @@ function calculateDueDate(submitDate, turnaround) {
 }
 
 //"what is the input submitDate";
-console.log(calculateDueDate("12:37AM Thursday", 13.5)); //should return: 2:12PM Thursday
+console.log(calculateDueDate("10:37AM Thursday", 13.5)); //should return: 2:12PM Thursday
+
+module.exports = calculateDueDate
