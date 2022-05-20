@@ -5,13 +5,13 @@
 
 function calculateDueDate(submitDate, turnaround) {
 
-    const workingDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    const workingDays = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
     const time = submitDate.split(" ")[0].slice(0, -2) //2:12
     const hour = Number(time.split(":")[0]) //2
     const minute = Number(time.split(":")[1]) //12
-    const meridiem = submitDate.split(" ")[0].slice(-2) //AM or PM
-    const submitDayIndex = workingDays.indexOf(submitDate.split(" ")[1]) //look up working day in array
+    const meridiem = submitDate.split(" ")[0].slice(-2).toLowerCase() //am or pm
+    const submitDayIndex = workingDays.indexOf(submitDate.split(" ")[1]?.toLowerCase()) //look up working day in array
     turnaround = Math.round(turnaround * 10) / 10 //integer or 1 decimal
 
 
@@ -21,16 +21,16 @@ function calculateDueDate(submitDate, turnaround) {
         isNaN(minute) ||
         hour.toString().length > 2 ||
         minute < 0 || minute > 59 ||
-        (meridiem !== "AM" && meridiem !== "PM")
+        (meridiem !== "am" && meridiem !== "pm")
     ) {
         return "Invalid date format. The correct format is 2:12PM or AM"
     }
 
     if (submitDayIndex < 0){
-        return submitDate.split(" ")[1] + "is not a working day"
+        return submitDate.split(" ")[1] + " is not a working day"
     }
 
-    if (meridiem === "AM" && (hour < 9 || 13 <= hour) || meridiem === "PM" && (hour < 1 || 5 <= hour)) {
+    if (meridiem === "am" && (hour < 9 || 13 <= hour) || meridiem === "pm" && (hour < 1 || 5 <= hour)) {
         return "You can only report a problem during working hours"
     }
 
@@ -49,7 +49,7 @@ function calculateDueDate(submitDate, turnaround) {
     const workingDayInMins = 480
     let hoursElapsedOnSubmitDay = 0
 
-    if (meridiem === "AM"){
+    if (meridiem === "am"){
         hoursElapsedOnSubmitDay = hour - 9
     } else {
         hoursElapsedOnSubmitDay = 4 + (hour - 1)
@@ -71,6 +71,7 @@ function calculateDueDate(submitDate, turnaround) {
 
     const daysElapsed = Math.floor(totalTimeElapsedInMins / workingDayInMins) //how many days passed from submit to resolve
     const resolveDay = workingDays[(submitDayIndex + daysElapsed % 5) % 5] //convert resolveDay to Mon-Fri format
+    const resolveDayCapital = resolveDay[0].toUpperCase() + resolveDay.slice(1)
 
 
     //it is not enough to add hours and mins together, as turnaround can be non-integer (e.g. 16.5)
@@ -92,10 +93,10 @@ function calculateDueDate(submitDate, turnaround) {
 
     const resolveTimeFormatted = formatTimeInMins(resolveTimeInMins);
 
-    return resolveTimeFormatted + " " + resolveDay; //adding weeks: Math.floor(totalTimeElapsedInMins / (workingDayInMins * 5))
+    return resolveTimeFormatted + " " + resolveDayCapital; //adding weeks: Math.floor(totalTimeElapsedInMins / (workingDayInMins * 5))
 }
 
 //"what is the input submitDate";
-console.log(calculateDueDate("10:37AM Thursday", 13.5)); //should return: 2:12PM Thursday
+console.log(calculateDueDate("10:12am Wednesday", 13.5)); //should return: 2:12PM Thursday
 
 module.exports = calculateDueDate
