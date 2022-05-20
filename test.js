@@ -7,6 +7,8 @@
 //negative turnaround
 //deal with non integer turnaround
 //AM, PM, csomo datet kiprobalni
+    //pdf-ben példa
+    //kiindulni ngyon egyszerűből pl 9:00AM 0 passed és ezt variálni
     //csak 2 óra telik el de átcsúszik másik napra
     //csak 2 óra telik el de átcsúszik másik hétre (péntek-hétfő)
     //marad aznap
