@@ -1,0 +1,23 @@
+{
+  "name": "due_date_calc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dueDateCalculator.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/minho-sama/due_date_calc.git"
+  },
+  "keywords": [],
+  "author": "Nguyen Anh Minh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/minho-sama/due_date_calc/issues"
+  },
+  "homepage": "https://github.com/minho-sama/due_date_calc#readme",
+  "devDependencies": {
+    "jest": "^28.1.0"
+  }
+}
