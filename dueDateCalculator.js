@@ -77,20 +77,6 @@ function calculateDueDate(submitDate, turnaround) {
     //it is not enough to add hours and mins together, as turnaround can be non-integer (e.g. 16.5)
     const resolveTimeInMins = totalTimeElapsedInMins % workingDayInMins //0 <= resolveTimeInMins < 480 (0 to 8)
 
-    function formatTimeInMins(resolveTime) {
-
-        const resolveHour24format = 9 + Math.floor(resolveTime / 60)
-        const resolveHour12format = ((resolveHour24format + 11) % 12 + 1) // resolveHour24format % 12 is not good for 12AM (results in 0)
-
-        const suffix = resolveHour24format > 12 ? "PM" : "AM"
-
-        const resolveMin = `0${resolveTime % 60}` //0 is needed, because 12:00AM input will have an output 12:0
-
-        let formattedTime = `${resolveHour12format}:${resolveMin.slice(-2)}${suffix}`
-
-        return formattedTime
-    }
-
     const resolveTimeFormatted = formatTimeInMins(resolveTimeInMins);
 
     return resolveTimeFormatted + " " + resolveDayCapital; //adding WEEKS: Math.floor(totalTimeElapsedInMins / (workingDayInMins * 5))
@@ -99,4 +85,21 @@ function calculateDueDate(submitDate, turnaround) {
 //"what is the input submitDate";
 console.log(calculateDueDate("10:12am Wednesday", 13.5)); //should return: 2:12PM Thursday
 
-module.exports = calculateDueDate
+function formatTimeInMins(resolveTime) {
+
+    const resolveHour24format = 9 + Math.floor(resolveTime / 60)
+    const resolveHour12format = ((resolveHour24format + 11) % 12 + 1) // resolveHour24format % 12 is not good for 12AM (results in 0)
+
+    const suffix = resolveHour24format > 12 ? "PM" : "AM"
+
+    const resolveMin = `0${resolveTime % 60}` //0 is needed, because 12:00AM input will have an output 12:0
+
+    let formattedTime = `${resolveHour12format}:${resolveMin.slice(-2)}${suffix}`
+
+    return formattedTime
+}
+
+module.exports = {
+    calculateDueDate: calculateDueDate,
+    formatTimeInMins: formatTimeInMins,
+};

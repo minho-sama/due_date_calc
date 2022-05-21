@@ -1,7 +1,7 @@
 /* eslint-disable semi */
 /* eslint-disable no-undef */
 
-const calculateDueDate = require("./dueDateCalculator")
+const {calculateDueDate, formatTimeInMins} = require('./dueDateCalculator');
 
 //test for validating input date/time and turnaround time
 const invalidDateInputMessage = "Invalid date format. The correct format is 2:12PM or AM"
@@ -73,6 +73,13 @@ test("lowercase and capital working days should both work", () => {
     expect(calculateDueDate("4:12PM tUESDAY", 13.5)).toBe("1:42PM Thursday")
 })
 
+//test for helper function formatTimeInMins
+test("converts minutes to hours in 12H format during working days correctly", () => {
+    expect(formatTimeInMins(0)).toBe("9:00AM")
+    expect(formatTimeInMins(180)).toBe("12:00AM")
+    expect(formatTimeInMins(240)).toBe("1:00PM")
+    expect(formatTimeInMins(479)).toBe("4:59PM")
+})
 
 //tests for the correct due date
 test("correctly returns date for same the same day", () => {
