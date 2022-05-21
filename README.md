@@ -8,7 +8,7 @@ where **HH** represents hours, **MM** represents minutes, **meridiem** can be AM
 
 **turnaround** represents the **HOURS** needed, with no upper limit. </br>
 
- (e.g. 2:12PM Tuesday, 16 will return 2:12PM Thursday ) </br>
+ (e.g. **calculateDueDate(2:12PM Tuesday, 16)** will return **2:12PM Thursday** ) </br>
 
 the solution is in <ins>dueDateCalculator.js</ins>
 
