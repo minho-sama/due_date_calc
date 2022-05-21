@@ -1,23 +1,5 @@
 /* eslint-disable semi */
 /* eslint-disable no-undef */
-//invalid time format összes lehetőséget tesztelni
-//time is 02:12 instead of 12
-//dayindex < 0
-//not working hours
-//idiot format 13:12AM or 4:12PM
-//turnaround === 0
-//negative turnaround
-//deal with non integer turnaround
-//AM, PM, csomo datet kiprobalni
-    //pdf-ben példa
-    //kiindulni ngyon egyszerűből pl 9:00AM 0 passed és ezt variálni
-    //csak 2 óra telik el de átcsúszik másik napra
-    //csak 2 óra telik el de átcsúszik másik hétre (péntek-hétfő)
-    //marad aznap
-    //soksok héten keresztül megy a turnaround
-    //pl "2:12PM Tuesday", 5003 és "2:12PM Tuesday", 5000
-    //perc 0, perc 00
-    //csak pár perc teljen el (turnaround 0.1)
 
 const calculateDueDate = require("./dueDateCalculator")
 
@@ -93,7 +75,52 @@ test("lowercase and capital working days should both work", () => {
 
 
 //tests for the correct due date
+test("correctly returns date for same the same day", () => {
+    expect(calculateDueDate("9:37AM Thursday", 1)).toBe("10:37AM Thursday")
+    expect(calculateDueDate("9:37AM Thursday", 5)).toBe("2:37PM Thursday")
+})
+
+test("turnaround zero, should return same date (also 2 zeroes in minutes)", () => {
+    expect(calculateDueDate("12:00AM Tuesday", 0)).toBe("12:00AM Tuesday")
+})
+
+test("2 days passed exactly (task example)", () => {
+    expect(calculateDueDate("2:12PM Tuesday", 16)).toBe("2:12PM Thursday")
+})
+
+test('correctly "overflows" to the next day', () => {
+    expect(calculateDueDate("2:12PM Tuesday", 3)).toBe("9:12AM Wednesday")
+})
+
+test('correctly "overflows" to the next week', () => {
+    expect(calculateDueDate("2:12PM Friday", 3)).toBe("9:12AM Monday")
+    expect(calculateDueDate("9:12AM Friday", 12)).toBe("1:12PM Monday")
+})
+
+test('correctly jumps multiple days', () => {
+    expect(calculateDueDate("2:12PM Tuesday", 11)).toBe("9:12AM Thursday")
+})
+
+test("non-integer turnaround correctly returns due date", () => {
+    expect(calculateDueDate("10:37AM Thursday", 0.5)).toBe("11:07AM Thursday")
+    expect(calculateDueDate("10:37AM Thursday", 0.1)).toBe("10:43AM Thursday")
+    expect(calculateDueDate("10:37AM Thursday", 0.99999)).toBe("11:37AM Thursday") //rounds turnaround
+})
+
 test("correctly owerflows to next week from Thursday to Monday", () => {
-    expect(calculateDueDate("12:37AM Thursday", 13.5)).toBe("10:07AM Monday")
+    expect(calculateDueDate("11:37AM Thursday", 13.5)).toBe("9:07AM Monday")
+})
+
+test("correctly jumps multiple weeks", () => {
+    expect(calculateDueDate("11:37AM Thursday", 80)).toBe("11:37AM Thursday")
+    expect(calculateDueDate("11:37AM Thursday", 100)).toBe("3:37PM Monday")
+    expect(calculateDueDate("11:37AM Thursday", 102.5)).toBe("10:07AM Tuesday")
+})
+
+test("correctly returns due date (different minute inputs)", () => {
+    expect(calculateDueDate("9:0AM Thursday", 1)).toBe("10:00AM Thursday")
+    expect(calculateDueDate("9:00AM Thursday", 5)).toBe("2:00PM Thursday")
+    expect(calculateDueDate("9:01AM Thursday", 5)).toBe("2:01PM Thursday")
+    expect(calculateDueDate("9:1AM Thursday", 5)).toBe("2:01PM Thursday")
 })
 

@@ -93,7 +93,7 @@ function calculateDueDate(submitDate, turnaround) {
 
     const resolveTimeFormatted = formatTimeInMins(resolveTimeInMins);
 
-    return resolveTimeFormatted + " " + resolveDayCapital; //adding weeks: Math.floor(totalTimeElapsedInMins / (workingDayInMins * 5))
+    return resolveTimeFormatted + " " + resolveDayCapital; //adding WEEKS: Math.floor(totalTimeElapsedInMins / (workingDayInMins * 5))
 }
 
 //"what is the input submitDate";
