@@ -6,7 +6,7 @@ const {calculateDueDate, formatTimeInMins} = require('./dueDateCalculator');
 //test for validating input date/time and turnaround time
 const invalidDateInputMessage = "Invalid date format. The correct format is 2:12PM or AM"
 
-test("hour input is not a number, shows invalid date format message", () => {
+test("should show invalid date format message because hour input is not a number", () => {
     expect(calculateDueDate("x9:12PM Monday", 12)).toBe(invalidDateInputMessage)
 })
 
@@ -34,7 +34,7 @@ test("meridiem is not AM nor PM, shows invalid date format message", () => {
     expect(calculateDueDate("10:12GG Monday", 12)).toBe(invalidDateInputMessage)
 })
 
-test("non-working day input returns no-working day message", () => {
+test("should return no-working day message because of non-working day input", () => {
     const saturday = "Saturday"
     const sunday = "sunday"
 
@@ -74,6 +74,11 @@ test("lowercase and capital working days should both work", () => {
 })
 
 //test for helper function formatTimeInMins
+
+test("should return string for integer input", () => {
+    expect(typeof formatTimeInMins(0)).toBe("string")
+})
+
 test("converts minutes to hours in 12H format during working days correctly", () => {
     expect(formatTimeInMins(0)).toBe("9:00AM")
     expect(formatTimeInMins(180)).toBe("12:00AM")
@@ -91,7 +96,7 @@ test("turnaround zero, should return same date (also 2 zeroes in minutes)", () =
     expect(calculateDueDate("12:00AM Tuesday", 0)).toBe("12:00AM Tuesday")
 })
 
-test("2 days passed exactly (task example)", () => {
+test("should return due date with 2 days passed exactly (task example)", () => {
     expect(calculateDueDate("2:12PM Tuesday", 16)).toBe("2:12PM Thursday")
 })
 
